@@ -1,3 +1,5 @@
-add_subdirectory(Common)
-add_subdirectory(Server)
-add_subdirectory(Client)
+if (EMSCRIPTEN_BUILD)
+  add_subdirectory(Client)
+else()
+  add_subdirectory(Server)
+endif()
