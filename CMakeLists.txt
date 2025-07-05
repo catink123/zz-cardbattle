@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.22)
 project(zz-cardbattle)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -9,14 +9,6 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
 
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
-endif()
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-  set(EMSCRIPTEN_BUILD TRUE)
-  message(STATUS "Configuring for Emscripten")
-  set(PLATFORM Web CACHE STRING "Platform to build for")
-else()
-  set(EMSCRIPTEN_BUILD FALSE)
 endif()
 
 find_program(CCACHE ccache)
@@ -38,21 +30,56 @@ if (PROJECT_IS_TOP_LEVEL AND UNIX)
 endif()
 
 # Libraries
-
-if (EMSCRIPTEN_BUILD)
   include(FetchContent)
 
-  set(RAYLIB_BUILD_EXAMPLES OFF CACHE INTERNAL "Disable examples")
-  set(RAYLIB_GLFW_BUILD_X11 OFF CACHE INTERNAL "Disable GLFW X11 build")
+# Configure Abseil
+set(ABSL_PROPAGATE_CXX_STD ON CACHE BOOL "" FORCE)
+set(ABSL_ENABLE_INSTALL ON CACHE BOOL "" FORCE)
+set(ABSL_BUILD_TESTING OFF CACHE BOOL "" FORCE)
+set(ABSL_BUILD_TEST_HELPERS OFF CACHE BOOL "" FORCE)
+set(ABSL_USE_GOOGLETEST_HEAD OFF CACHE BOOL "" FORCE)
 
   FetchContent_Declare(
-    raylib
-    GIT_REPOSITORY https://github.com/raysan5/raylib
-    GIT_TAG 5.5
+    abseil-cpp
+    GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
+    GIT_TAG 20250512.1
   )
-  FetchContent_MakeAvailable(raylib)
-else()
-  find_package(Boost 1.88.0 REQUIRED COMPONENTS system)
-endif()
+  FetchContent_MakeAvailable(abseil-cpp)
+
+# Configure re2 to not export targets when using FetchContent
+set(RE2_BUILD_TESTING OFF CACHE BOOL "" FORCE)
+set(RE2_BUILD_BENCHMARK OFF CACHE BOOL "" FORCE)
+set(RE2_BUILD_SHARED OFF CACHE BOOL "" FORCE)
+set(RE2_BUILD_STATIC ON CACHE BOOL "" FORCE)
+set(RE2_BUILD_INSTALL OFF CACHE BOOL "" FORCE)
+
+  FetchContent_Declare(
+    re2
+    GIT_REPOSITORY https://github.com/google/re2.git
+    GIT_TAG 2024-07-02
+  )
+  FetchContent_MakeAvailable(re2)
+
+  set(USERVER_FEATURE_GRPC OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_CLICKHOUSE OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_POSTGRESQL OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_MONGODB OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_REDIS OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_RABBITMQ OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_MYSQL OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_DOCKER OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_CRYPTOPP OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_METRICS_PROMETHEUS OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_TESTSUITE OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_UNIVERSAL OFF CACHE BOOL "" FORCE)
+  set(USERVER_FEATURE_YDB OFF CACHE BOOL "" FORCE)
+  FetchContent_Declare(
+    userver
+    GIT_REPOSITORY https://github.com/userver-framework/userver.git
+    GIT_TAG v2.10
+  )
+  FetchContent_MakeAvailable(userver)
 
 add_subdirectory(src)
+
+target_link_libraries(Server PRIVATE userver-core)

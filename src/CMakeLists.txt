@@ -1,5 +1,1 @@
-if (EMSCRIPTEN_BUILD)
-  add_subdirectory(Client)
-else()
   add_subdirectory(Server)
-endif()
