@@ -5,25 +5,52 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Client (debug mode)",
+            "cwd": "client",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug"
+        },
+        {
             "name": "Client (Web)",
-            "cwd": "src/Client",
+            "cwd": "client",
             "request": "launch",
             "type": "dart",
             "deviceId": "chrome"
         },
         {
             "name": "Client (profile mode)",
-            "cwd": "src/Client",
+            "cwd": "client",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
             "name": "Client (release mode)",
-            "cwd": "src/Client",
+            "cwd": "client",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "Server (Debug)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/server/build/debug/Server",
+            "args": ["--config", "${workspaceFolder}/server/build/debug/static_config.yaml"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build-server"
         }
     ]
 }
