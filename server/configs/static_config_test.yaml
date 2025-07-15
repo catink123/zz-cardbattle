@@ -1,0 +1,59 @@
+components_manager:
+  task_processors:
+    main-task-processor:
+      worker_threads: 2
+    fs-task-processor:
+      worker_threads: 2
+  default_task_processor: main-task-processor
+  components:
+    logging:
+      fs-task-processor: fs-task-processor
+      loggers:
+        default:
+          file_path: '@stdout'
+          level: error
+        access:
+          file_path: '@stderr'
+          level: error
+    server:
+      listener:
+        port: 8080
+        task_processor: main-task-processor
+      logger_access: access
+      logger_access_tskv: access
+    handler-health:
+      path: /health
+      method: GET,OPTIONS
+      task_processor: main-task-processor
+    handler-register:
+      path: /auth/register
+      method: POST,OPTIONS
+      task_processor: main-task-processor
+    handler-login:
+      path: /auth/login
+      method: POST,OPTIONS
+      task_processor: main-task-processor
+    handler-profile:
+      path: /auth/profile
+      method: GET,OPTIONS
+      task_processor: main-task-processor
+    handler-create-session:
+      path: /game/create-session
+      method: POST,OPTIONS
+      task_processor: main-task-processor
+    handler-join-session:
+      path: /game/join-session
+      method: POST,OPTIONS
+      task_processor: main-task-processor
+    handler-get-sessions:
+      path: /game/sessions
+      method: GET,OPTIONS
+      task_processor: main-task-processor
+    handler-leave-session:
+      path: /game/leave-session
+      method: POST,OPTIONS
+      task_processor: main-task-processor
+    handler-battle-ws:
+      path: /battle/ws
+      method: GET,OPTIONS
+      task_processor: main-task-processor 
