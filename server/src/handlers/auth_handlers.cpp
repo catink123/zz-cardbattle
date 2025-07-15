@@ -7,7 +7,6 @@
 
 namespace cardbattle {
 
-// Global managers (in a real app, these would be dependency injected)
 extern UserManager* user_manager;
 
 std::string RegisterHandler::HandleRequestThrow(const userver::server::http::HttpRequest& request, userver::server::request::RequestContext&) const {

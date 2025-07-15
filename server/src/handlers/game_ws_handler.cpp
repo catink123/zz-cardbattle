@@ -216,9 +216,6 @@ void BattleWebSocketHandler::Handle(userver::server::websocket::WebSocketConnect
         try {
             BattleState battle_state = battle_manager->GetBattleState(closed_session_id);
             battle_state.last_action = "Player left: " + closed_user_id;
-            // Optionally, add a custom field to indicate a player left
-            // (You may need to add this to the BattleState struct and serialization)
-            // battle_state.player_left = closed_user_id;
             // Save and broadcast
             battle_manager->SaveBattleState(closed_session_id, battle_state);
             BroadcastBattleState(closed_session_id);
@@ -230,7 +227,7 @@ void BattleWebSocketHandler::Handle(userver::server::websocket::WebSocketConnect
 }
 
 void BattleWebSocketHandler::BroadcastSessionUpdate(const std::string& session_id) {
-    // Implementation for broadcasting session updates
+    // Left unimplemented
     LOG_INFO() << "Broadcasting session update for session: " << session_id;
 }
 
@@ -269,7 +266,7 @@ void BattleWebSocketHandler::BroadcastBattleState(const std::string& session_id)
 }
 
 void BattleWebSocketHandler::RefreshAllClients(const std::string& session_id) {
-    // Implementation for refreshing all clients
+    // Left unimplemented
     LOG_INFO() << "Refreshing all clients for session: " << session_id;
 }
 
@@ -372,8 +369,7 @@ std::string BattleWebSocketHandler::BattleStateToJson(const BattleState& state) 
 }
 
 std::string BattleWebSocketHandler::GetPlayerKey(const std::string& player_id, const BattleState& state) {
-    // In the simplified system, we'll use the player_id directly
-    // This maps internal player IDs to the test-friendly names
+    // Needed for tests
     return player_id;
 }
 

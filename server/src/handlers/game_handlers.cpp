@@ -9,7 +9,6 @@
 
 namespace cardbattle {
 
-// Global managers (in a real app, these would be dependency injected)
 extern GameSessionManager* session_manager;
 extern BattleManager* battle_manager;
 
